@@ -2,19 +2,19 @@ require "mysql2"
 require_relative 'dbconnection'
 require_relative '../ui/home'
 
-class Login
+$current_user = 0
 
+class Login
   def self.log(username, password)
     $types = %w[user admin]
-
-    db = Dbconnection.connect
     
-    stmt = db.prepare("SELECT * FROM user WHERE uname = ? AND pwd = ?")
+    stmt = $db.prepare("SELECT * FROM user WHERE uname = ? AND pwd = ?")
     results = stmt.execute(username, password)
     
     data = ''
     results.each do |row|
         data = row["type"]
+        $current_user = row["id"]
     end
     
     if results.count == 0
@@ -31,7 +31,5 @@ class Login
 
   rescue => e
     return "Database Error: #{e.message}"
-  ensure
-    db.close if db
   end
 end

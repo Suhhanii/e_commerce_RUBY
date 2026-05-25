@@ -41,3 +41,9 @@ git config --list
 
 *for check global config
 git config -- global --list
+
+
+
+send
+method missing
+definemethod
