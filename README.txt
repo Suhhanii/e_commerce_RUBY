@@ -47,3 +47,19 @@ git config -- global --list
 send
 method missing
 definemethod
+
+
+for create orders table
+create table orders(id int auto_increment primary key,user_id int, status varchar(20),total_amount decimal(10,2),place_at timestamp default current_timestamp, foreign key(user_id) references user(id), foreign key(status) references status(status));
+
+for create order_item table
+create table order_item(id int auto_increment primary key,order_id int,product_id int,quantity int,price decimal(10,2),subtotal decimal(10,2), foreign key (product_id) references product(id), foreign key(order_id) references orders(id));
+
+status table 
+describe status;;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| status | varchar(20) | NO   | PRI | NULL    |       |
++--------+-------------+-------------------------------
+
