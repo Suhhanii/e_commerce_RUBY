@@ -1,24 +1,19 @@
 require_relative "Service/login_signup_service"
 require "io/console"
 require "highline"
+require "yaml"
 
+$data = YAML.load_file('en.yml');
 class CLI
   def self.run
-    puts <<~DATA
-           Log-in / Sign-up
-           -----------------------
-           1) For Log-in
-           2) For Sign-up
-           3) For Exit
-           -----------------------
-         DATA
+    puts $data['login_signup_menu']
     value = gets.chomp.to_i
 
     case value
     when 1
       puts "-----------------------"
 
-      puts "Enter Username"
+      puts "Enter Username / Email"
       uname = gets.chomp
 
       hide = HighLine.new
@@ -33,36 +28,24 @@ class CLI
       puts "Enter Username"
       uname = gets.chomp
 
-      puts "Enter Password"
       hide = HighLine.new
       pwd = hide.ask("Enter Password") { |r| r.echo = "*"}
 
       puts "Enter Contact"
       contact = gets.chomp.to_i
-      catch (:rerun) do
+      until contact.digit.count != 10
+        puts "Enter Contact"
         contact = gets.chomp.to_i
-        if contact.digits.length>10 || contact.digits.length<10
-          puts "Contact Number should be 10 digits Only"
-          throw :rerun
-        end
       end
 
       puts "Enter Email"
       email = gets.chomp
-      catch (:rerun) do
-        email = gets.chomp
-        unless email.end_with?("@gmail.com")
-          throw :rerun
-        end
+      until email.end_with?("@gmail.com")
+         puts "Enter Valid email"
+         email = gets.chomp
       end
 
-      puts <<~INPUT
-             Select Which Type Of User You Are
-             1) For Admin
-             2) For Customer
-           INPUT
-
-      puts "-----------------------"
+      puts $data['sign_up_user_menu']
       type = gets.chomp.to_i
       if [1, 2].include?(type)
         LoginSignupService.signup(uname, pwd, contact, email, type)
@@ -74,8 +57,8 @@ class CLI
       exit
     else
       puts "Wrong Choice Please Try Again"
+      run
     end
-    run
   end
 end
 

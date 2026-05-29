@@ -9,8 +9,8 @@ class LoginSignupService
   TYPE = { 1 => "admin", 2 => "customer" }
 
   def self.log_in(username, password)
-    stmt = $db.prepare("SELECT * FROM user WHERE uname = ? AND pwd = ?")
-    result = stmt.execute(username, password)&.first
+    stmt = $db.prepare("SELECT * FROM user WHERE (uname = ? OR email = ?) AND pwd = ?")
+    result = stmt.execute(username, username, password)&.first
     #safe navigation operator & , call first when result is not nil
     #if we dont use it an datanot get from database it will raise an error
 

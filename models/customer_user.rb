@@ -2,43 +2,37 @@ require_relative "user"
 require_relative "../Service/user_service"
 require_relative "../Service/cart_service"
 require_relative "../dbconnection"
+require_relative "order"
+require_relative "category"
+require_relative "product"
 require 'byebug'
-require "tabulo"
+require 'tabulo'
 
 class CustomerUser < User
   def self.home
-    puts <<~MENU
-           -----------------------
-            1) For Get Category
-            2) For Get All Products
-            3) For Get Product By Category
-            4) For Open Cart
-            5) For Add Product into Cart
-            6) For Remove Product From Cart
-            7) For Check Order History"
-            8) For Logout
-           -----------------------
-         MENU
-
+    puts $data['customer_menu']
     value = gets.chomp.to_i
 
     case value
     when 1
-      data = UserService.get_category
-      User.show_category(data)
+      data = Category.get_category
+      Category.show_category(data)
     when 2
-      data = UserService.get_all_products
-      User.show_products(data)
+      data = Product.get_all_products
+      Product.show_products(data)
     when 3
       puts  "---------------------"
-      data = UserService.get_category
-      User.show_category(data)
+      data = Category.get_category
+      Category.show_category(data)
 
       puts "Enter Category Id"
       category = gets.chomp.to_i
-      data = UserService.get_product_by_category(category)
-      User.show_products(data)
-
+      data = Product.get_product_by_category(category)
+      unless data.first
+        puts "----------There Is No Product Found for Selected Category----------"
+      else
+        Product.show_products(data)
+      end
     when 4
       data = CartService.open_cart
 
@@ -46,9 +40,10 @@ class CustomerUser < User
         puts "---------Cart is Empty----------"
       else
         CustomerUser.show_user_cart(data)
-
       end
     when 5
+      data = Product.get_all_products
+      Product.show_products(data)
       puts "Enter Product Id"
       id = gets.chomp.to_i
       puts "Enter Quantity For the Product"
@@ -60,13 +55,13 @@ class CustomerUser < User
       id = gets.chomp.to_i
       puts CartService.remove_from_cart(id)
     when 7
-      data = UserService.get_order_history
+      data = Order.get_order_history
 
       unless data.first
         puts "There Is No Order History"
       else
-        data = UserService.get_order_history
-        User.show_orders(data)
+        data = Order.get_order_history
+        Order.show_orders(data)
       end
       
     when 8
@@ -107,18 +102,11 @@ class CustomerUser < User
     value = gets.chomp.to_i
 
     case value
-
     when 1
-      data.each do |i|
-        stmt = $db.prepare("select * from product where id = ?")
-        stock = stmt.execute(i["id"])&.first['stock']
-        if stock >= i['quantity'].to_i
-          UserService.place_order(data, $current_user.id, grand_total)
-        elsif stock < i['quantity'].to_i
-          puts "Quantity is more then stock"
-        else
-          puts "Out Of Stock"
-        end
+      if is_safe_to_place_order?(data)
+        Order.place_order(data, $current_user.id, grand_total)
+      else
+        CustomerUser.home
       end
     when 2
       CustomerUser.home
@@ -129,21 +117,35 @@ class CustomerUser < User
   end
 
   def self.order_menu
-    puts <<~MENU
-    1) For Cancel Order
-    2) Continue Shoping"
-    MENU
-
+    puts $data['order_menu']
     value = gets.chomp.to_i
 
     case value
     when 1
-      UserService.cancel_order
+      Order.cancel_order
     when 2
       UserService.home
     else
       puts "Wrong choise try Again"
       CustomerUser.order_menu
     end
+  end
+
+  def self.is_safe_to_place_order?(data)
+    stmt = $db.prepare("select stock from product where id = ?")
+    data.each do |row|
+      stock = stmt.execute(row['id'].to_i)&.first['stock'].to_i
+
+      unless stock
+        puts "Product #{row['id']} is Out of Stock"
+        return false
+      end
+
+      if stock < row['quantity'].to_i
+        puts "Selected Quantity #{row['quantity']} is More than available stock of product #{row['id']}"
+        return false
+      end
+    end
+    true
   end
 end

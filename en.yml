@@ -1,0 +1,54 @@
+login_signup_menu : |
+          -----------------------
+           Log-in / Sign-up
+          -----------------------
+           1) For Log-in
+           2) For Sign-up
+           3) For Exit
+          -----------------------
+admin_home: |
+           -----------------------
+           1) For Add New Category
+           2) For Add New Product
+           3) For See Users
+           4) For Remove Any User
+           5) For Remove Any Product
+           6) For Get All Product
+           7) For See All Orders
+           8) For Update Status Of Order
+           9) For Get All Category
+           10) For logout
+           -----------------------
+
+sign_up_user_menu : |
+          ----------------------------------
+           Select Which Type Of User You Are
+             1) For Admin
+             2) For Customer
+          ----------------------------------
+
+customer_menu : |
+          -----------------------
+            1) For Get Category
+            2) For Get All Products
+            3) For Get Product By Category
+            4) For Open Cart
+            5) For Add Product into Cart
+            6) For Remove Product From Cart
+            7) For Check Order History
+            8) For Logout
+          -----------------------
+
+order_menu : |
+          ---------------------
+          1) For Cancel Order
+          2) Continue Shoping"
+          ---------------------
+
+user_menu :
+         -----------------------
+         1) For Admin
+         2) For Customer
+         3) For All
+         -----------------------
+

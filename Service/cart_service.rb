@@ -1,9 +1,9 @@
-require_relative "../dbconnection"
 
+require_relative "../models/product"
 
 class CartService
   def self.add_to_cart(product_id, quantity)
-    data = CartService.get_product_by_id(product_id)
+    data = Product.get_product_by_id(product_id)
 
     $stock = 0
 
@@ -69,12 +69,5 @@ class CartService
     "Remove From Cart Successfully"
   rescue => e
     puts "#{e} error while removing from cart"
-  end
-
-  def self.get_product_by_id(id)
-    stmt = $db.prepare("SELECT * from product where id = ?")
-    data = stmt.execute(id);
-  rescue => e
-    puts "#{e} error while fetching product by id"
   end
 end
