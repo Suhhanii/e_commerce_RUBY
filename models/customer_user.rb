@@ -1,5 +1,4 @@
 require_relative "user"
-require_relative "../Service/user_service"
 require_relative "../Service/cart_service"
 require_relative "../dbconnection"
 require_relative "order"

@@ -15,9 +15,7 @@ class CLI
 
       puts "Enter Username / Email"
       uname = gets.chomp
-
-      hide = HighLine.new
-      pwd = hide.ask("Enter Password") { |r| r.echo = "*"}
+      pwd = hide_password
 
       puts "-----------------------"
 
@@ -27,38 +25,30 @@ class CLI
 
       puts "Enter Username"
       uname = gets.chomp
-
-      hide = HighLine.new
-      pwd = hide.ask("Enter Password") { |r| r.echo = "*"}
+      pwd = hide_password
 
       puts "Enter Contact"
       contact = gets.chomp.to_i
-      until contact.digit.count != 10
-        puts "Enter Contact"
-        contact = gets.chomp.to_i
-      end
 
       puts "Enter Email"
       email = gets.chomp
-      until email.end_with?("@gmail.com")
-         puts "Enter Valid email"
-         email = gets.chomp
-      end
 
       puts $data['sign_up_user_menu']
       type = gets.chomp.to_i
-      if [1, 2].include?(type)
-        LoginSignupService.signup(uname, pwd, contact, email, type)
-      else
-        puts "Select Valid Type"
-        self.run
-      end
+      data = {uname: uname, pwd: pwd, contact: contact, email: email, type: type}
+      User.new(data).save!
+      # LoginSignupService.signup(uname, pwd, contact, email, type)
     when 3
       exit
     else
       puts "Wrong Choice Please Try Again"
       run
     end
+  end
+
+  def self.hide_password
+    hide = HighLine.new
+    hide.ask("Enter Password") { |r| r.echo = "*"}
   end
 end
 

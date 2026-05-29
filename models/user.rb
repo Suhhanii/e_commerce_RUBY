@@ -8,12 +8,13 @@ class User
                 :type
 
   def initialize(data)
-    @id = data["id"]
-    @uname = data["uname"]
-    @pwd = data["pwd"]
-    @contact = data["contact"]
-    @email = data["email"]
-    @type = data["type"]
+    data = data.transform_keys(&:to_sym)
+    @id      = data[:id]
+    @uname   = data[:uname]
+    @pwd     = data[:pwd]
+    @contact = data[:contact]
+    @email   = data[:email]
+    @type    = self.class.to_s
   end
 
   def admin?
@@ -22,6 +23,16 @@ class User
 
   def customer?
     type == "customer"
+  end
+
+  def save!
+    byebug
+    validate!
+  end
+
+  def validate!
+    if !valid_email? || !valid_contact?
+    end
   end
 
   def self.show_user(data)

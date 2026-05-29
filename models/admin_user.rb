@@ -1,8 +1,6 @@
 require "byebug"
 require_relative "user"
 require_relative "order"
-require_relative "../Service/admin_service"
-require_relative "../Service/user_service"
 require_relative "category"
 require_relative 'product'
 
