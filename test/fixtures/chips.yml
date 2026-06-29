@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date_of_packing: 2026-06-12
+  date_of_expiry: 2026-06-12
+
+two:
+  date_of_packing: 2026-06-12
+  date_of_expiry: 2026-06-12

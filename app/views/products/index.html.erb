@@ -1,0 +1,20 @@
+<%# <h1>Products#index</h1> %>
+<h3> <%= link_to "Login", new_session_path unless authenticated? %> </h3>
+
+<h2> Products </h2>
+
+<h3> <%= link_to "New Product", "/products/new" if authenticated? %> </h3>
+
+<div id='products'>
+  <% @products.each do |product| %>
+    <div>
+      <%# link_to(text, url) %>
+      <%# this is work when we use resources :products %>
+      <%# <%= link_to product.name, product_path(product.id)%>
+
+      <%# in this project we manually write routes so we have to provide url %>
+    <%= link_to product.name, "/products/#{product.id}"%>
+   </div>
+  <% end %>
+</div>
+
