@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+  get "pictures/index"
+  get "pictures/show"
+  get "pictures/new"
+  get "users/index"
+  get "users/show"
+  get "users/edit"
+  get "users/delete"
+  get "users/new"
+
+
+
   resource :session
   resources :passwords, param: :token
   #get all products
@@ -11,7 +22,6 @@ Rails.application.routes.draw do
 
   #read
   get "/products/:id", to: "products#show", as: :product
-
 
 
   #update
@@ -27,4 +37,10 @@ Rails.application.routes.draw do
   #if we dont want to write above all crud we can use resources
   resources :products
 
+  #check exception
+  post "divide", controller: "products", action: :divide, as: :divide
+
+  resources :products do
+    resource :picture
+  end
 end

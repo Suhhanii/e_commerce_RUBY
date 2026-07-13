@@ -1,8 +1,19 @@
 class ProductsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
+  def record_not_found
+    render plain: "Record Not Found (Prodcut Controller)", status: 404
+  end
 
   allow_unauthenticated_access only: %i[index show]
 
   before_action :set_product, only: %i[show edit update destroy]
+
+  def divide
+    a=params[:a].to_i
+    b=params[:b].to_i
+    a/b
+  end
 
   def index
     @products = Product.all # rails use instance variable to share data to view
@@ -10,6 +21,8 @@ class ProductsController < ApplicationController
 
   def show
     # @product = Product.find(params[:id])
+  session[:visited_products] ||= 0
+  session[:visited_products] += 1
   end
 
   def new
@@ -24,6 +37,7 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
     if @product.save
+      cookies[:product_name] = @product.name
       redirect_to "/products/#{@product.id}"
     else
       render :new, status: :unprocessable_entity
